@@ -101,13 +101,19 @@ for i in range(1,sheetSales.nrows):
     #     print("Product was not found in the Database.")
     # else:
     for row in cursor.fetchall():
-        product_id = row.ProductID             
-    cursor.execute('''
-                    INSERT INTO Messer.dbo.Sale (CustomerID, ProductID,Price,Amount)
-                    VALUES
-                    ('%d','%d','%f','%d')
-                    '''%(customer_id,product_id,float(price_sales),quantity))
-    conn.commit()
+        product_id = row.ProductID
+    
+    cursor.execute("SELECT * FROM Messer.dbo.Sale WHERE CustomerID = '%d' AND ProductID = '%d' AND Price = '%f' AND Amount = '%d'"%(customer_id,product_id,float(price_sales),quantity))
+    exists = cursor.fetchone()
+    if exists:
+        print("Sale data already exists in Database")
+    else:              
+        cursor.execute('''
+                        INSERT INTO Messer.dbo.Sale (CustomerID, ProductID,Price,Amount)
+                        VALUES
+                        ('%d','%d','%f','%d')
+                        '''%(customer_id,product_id,float(price_sales),quantity))
+        conn.commit()
 
     # cursor.execute('''
     #                 INSERT INTO Messer.dbo.Comment (CustomerID, SaleID,Date_comment,CommentText)

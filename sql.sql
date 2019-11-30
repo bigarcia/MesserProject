@@ -43,7 +43,7 @@ CREATE TABLE Comment (
     SaleIDCustomer INT NOT NULL,
     ProductID INT NOT NULL,
     DateComment VARCHAR(10),
-    CommentText VARCHAR(50),
+    CommentText VARCHAR(400),
     CONSTRAINT FK_SaleID FOREIGN KEY (SaleIDCustomer,CustomerID,ProductID) REFERENCES Sale (SaleID,CustomerID,ProductID) ON DELETE CASCADE ON UPDATE CASCADE  
 );
 

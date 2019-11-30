@@ -33,11 +33,10 @@ for i in range(1,sheetClient.nrows):
                         VALUES
                         ('%s','%s')
                         '''%(city,state))
-        conn.commit()
-    # cursor.execute("SELECT CityID FROM Messer.dbo.City WHERE Name = '%s' AND State = '%s'"%(city,state))
-    # for row in cursor.fetchall():
-        city_id = cursor.CityID
-    
+        conn.commit() 
+        city_id = cursor.execute('SELECT @@IDENTITY').fetchone()[0]
+  
+   
     #Check if the Customer already exists in database
     cursor.execute("SELECT * FROM Messer.dbo.Customer WHERE FirstName = '%s' AND LastName = '%s'"%(first_name,last_name))
     exists = cursor.fetchone()
@@ -89,17 +88,11 @@ for i in range(1,sheetSales.nrows):
     cursor = conn.cursor()
 
     cursor.execute("SELECT CustomerID FROM Messer.dbo.Customer WHERE FirstName = '%s' AND LastName = '%s'"%(first_name_sale,last_name_sale))
-    #exists = cursor.fetchone()
-    # if exists is None:
-    #     print("Customer was not found in the Database.")
-    # else:
+    
     for row in cursor.fetchall():
         customer_id = row.CustomerID
     cursor.execute("SELECT ProductID FROM Messer.dbo.Product WHERE Name = '%s'"%(product))
-    #exists = cursor.fetchone()
-    # if  exists is None:
-    #     print("Product was not found in the Database.")
-    # else:
+   
     for row in cursor.fetchall():
         product_id = row.ProductID
     
@@ -107,6 +100,9 @@ for i in range(1,sheetSales.nrows):
     exists = cursor.fetchone()
     if exists:
         print("Sale data already exists in Database")
+        cursor.execute("SELECT SaleID FROM Messer.dbo.Sale WHERE CustomerID = '%d' AND ProductID = '%d' AND Price = '%f' AND Amount = '%d'"%(customer_id,product_id,float(price_sales),quantity))
+        for row in cursor.fetchall():
+            sale_id = row.SaleID
     else:              
         cursor.execute('''
                         INSERT INTO Messer.dbo.Sale (CustomerID, ProductID,Price,Amount)
@@ -114,12 +110,13 @@ for i in range(1,sheetSales.nrows):
                         ('%d','%d','%f','%d')
                         '''%(customer_id,product_id,float(price_sales),quantity))
         conn.commit()
-
-    # cursor.execute('''
-    #                 INSERT INTO Messer.dbo.Comment (CustomerID, SaleID,Date_comment,CommentText)
-    #                 ('%d','%d','%s','%s')
-    #                 '''%(customer_id,product_id,date_comment,text_comment))
-    # conn.commit()
+        sale_id = cursor.execute('SELECT @@IDENTITY').fetchone()[0]
+    cursor.execute('''
+                    INSERT INTO Messer.dbo.Comment (CustomerID, SaleIDCustomer,ProductID,DateComment,CommentText)
+                    VALUES
+                    ('%d','%d','%d','%s','%s')
+                    '''%(customer_id,sale_id,product_id,date_comment,text_comment))
+    conn.commit()
 
 
 #Open the spreadsheet Fatores

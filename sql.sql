@@ -50,5 +50,5 @@ CREATE TABLE Comment (
 CREATE TABLE Factor(
     FactorID INT IDENTITY PRIMARY KEY,
     Name VARCHAR (50), 
-    Percentage VARCHAR (50)
+    Percentage Float
 );

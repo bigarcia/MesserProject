@@ -6,6 +6,9 @@ $ pip install xlrd
 
 $ pip install pyodbc
 
+$pip install matplot
 
-O Server utilizado para o SQL Server foi: localhost\SQLEXPRESS
-O testes foram realizados no Azura Data Studio.
+$pip install numpy
+
+The server used for SQL Server was: localhost\SQLEXPRESS
+The tests were performed in Azura Data Studio.
